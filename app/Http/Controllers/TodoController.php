@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 
+use function Laravel\Prompts\error;
+
 class TodoController extends Controller
 {
     public function index()
@@ -17,9 +19,13 @@ class TodoController extends Controller
         $validatedData = $request->validate([
             'title' => 'required',
         ]);
+        if(!$validatedData){
+            return response()->json([
+                'error' => "okok"], 422);
+        }
 
         $post = Todo::create([
-            'title' => $validatedData['title'],
+            'title' => $request->title,
             'body'  => $request->body ?? null, // No need for an if-else condition
         ]);
 

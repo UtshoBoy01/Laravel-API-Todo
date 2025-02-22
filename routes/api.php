@@ -9,5 +9,5 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::get('/todos',[TodoController::class,'index'])->name('todos');
-Route::get('/todos/{id}',[TodoController::class,'index_id'])->name('index_id');
 Route::post('/todo/create',[TodoController::class,'create'])->name('create');
+Route::get('/todos/{id}',[TodoController::class,'index_id'])->name('index_id');
