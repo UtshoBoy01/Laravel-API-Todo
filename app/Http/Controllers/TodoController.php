@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 use function Laravel\Prompts\error;
 
@@ -16,27 +17,47 @@ class TodoController extends Controller
     }
     
     public function create(Request $request){
-        $validatedData = $request->validate([
+
+        // $request->validate([
+        //     'title' => 'required',
+        // ]);
+
+        // $post = Todo::create([
+        //     'title' => $request->title,
+        //     'body'  => $request->body ?? null,
+        // ]);
+
+        // $response= [
+        //     'post' => $post,
+        //     'success' => " Create Success"
+        // ];
+
+        // return response()->json($response, 201); 
+        $validator = Validator::make($request->all(), [
             'title' => 'required',
         ]);
-        if(!$validatedData){
+    
+        if ($validator->fails()) {
             return response()->json([
-                'error' => "okok"], 422);
+                'errors' => $validator->errors(),
+                'message' => 'Validation failed'
+            ], 422);
         }
-
+    
         $post = Todo::create([
             'title' => $request->title,
-            'body'  => $request->body ?? null, // No need for an if-else condition
         ]);
-
-        $response= [
+    
+        return response()->json([
             'post' => $post,
-            'success' => " Create Success"
-        ];
-
-        return response()->json($response, 201); // Returns a proper JSON response with a status code
+            'success' => "Create Success"
+        ], 201);
     }
-    function index_id($id){}
+    
+    function index_id($id){
+        $todo = Todo::find($id);
+        return response()->json($todo);
+    }
 
 
 
