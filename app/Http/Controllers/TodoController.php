@@ -35,6 +35,7 @@ class TodoController extends Controller
         // return response()->json($response, 201); 
         $validator = Validator::make($request->all(), [
             'title' => 'required',
+            'body' => 'nullable|string',
         ]);
     
         if ($validator->fails()) {
@@ -46,6 +47,7 @@ class TodoController extends Controller
     
         $post = Todo::create([
             'title' => $request->title,
+            'body' => $request->body ?? null,
         ]);
     
         return response()->json([
@@ -53,10 +55,30 @@ class TodoController extends Controller
             'success' => "Create Success"
         ], 201);
     }
-    
+
     function index_id($id){
         $todo = Todo::find($id);
         return response()->json($todo);
+    }
+
+    function update(Request $request){
+        $validator = Validator::make($request->all(),[
+            'title' => 'required',
+            'body' => 'nullable|string',
+        ],); 
+        if($validator->fails()){
+            return response()->json([
+                'errors'=> $validator->errors()
+            ],422);
+        }
+        $post= Todo::where('id',$request->id)->update([
+            'title' => $request->title,
+            'body' => $request->body ?? null,
+        ]);
+        return response()->json([
+            'post' => $post,
+            'success' => "Update Success"
+        ], 201);
     }
 
 
