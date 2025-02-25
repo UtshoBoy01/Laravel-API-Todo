@@ -57,17 +57,18 @@ class TodoController extends Controller
                 'errors'=> $validator->errors()
             ],422);
         }
-        $post= Todo::where('id',$request->id)->update([
-            'title' => $request->title,
-            'body' => $request->body ?? null,
-        ]);
-        return response()->json([
-            'post' => $post,
-            'success' => "Update Success"
-        ], 201);
+
+        $todo = Todo::find($request->id);
+        if ($todo) {
+            $todo->update([
+                'title' => $request->title,
+                'body' => $request->body ?? null,
+            ]);
+        }
+        return response()->json($todo, 201);
     }
 
-    function delete($id){
+    function delete(Request $request, $id){
         $id = Todo::find($id);
         if(!$id){
             // return response()->json([
@@ -90,8 +91,23 @@ class TodoController extends Controller
         //     'success'=>"Delete Success"
         // ]);
         return [
-            'Success' => 'Delete Success...'
+            'success' => 'Delete Success...'
         ];
+    }
+
+    function complet($id){
+        $todo = Todo::find($id);
+        if($todo->completed == "false"){
+            Todo::where('id',$id)->update([
+                'completed' => 'true',
+            ]);
+        }else{
+            Todo::where('id',$id)->update([
+                'completed' => 'false',
+            ]);
+        }
+        $updatedTodo = Todo::find($id);
+        return $updatedTodo;
     }
 
 }
