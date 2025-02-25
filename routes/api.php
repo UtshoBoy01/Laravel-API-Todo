@@ -12,3 +12,4 @@ Route::get('/todos',[TodoController::class,'index'])->name('todos');
 Route::post('/todo/create',[TodoController::class,'create'])->name('create');
 Route::get('/todos/{id}',[TodoController::class,'index_id'])->name('index_id');
 Route::post('/todos/update',[TodoController::class,'update'])->name('update');
+Route::get('/todos/delete/{id}',[TodoController::class,'delete'])->name('delete');

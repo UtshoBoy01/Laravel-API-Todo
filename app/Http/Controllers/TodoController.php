@@ -81,6 +81,20 @@ class TodoController extends Controller
         ], 201);
     }
 
+    function delete($id){
+        $id = Todo::find($id);
+        if(!$id){
+            return response()->json([
+                'errors'=> 'Id not Find'
+            ]);
+        };
+        
+        $id->delete();
+        return response()->json([
+            'success'=>"Delete Success"
+        ]);
+    }
+
 
 
     // }
