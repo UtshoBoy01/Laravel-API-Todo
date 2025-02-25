@@ -12,27 +12,12 @@ class TodoController extends Controller
 {
     public function index()
     {
-        $todos = Todo::all();
+        $todos = Todo::orderBy('created_at', 'desc')->get();
         return response()->json($todos);
     }
     
     public function create(Request $request){
 
-        // $request->validate([
-        //     'title' => 'required',
-        // ]);
-
-        // $post = Todo::create([
-        //     'title' => $request->title,
-        //     'body'  => $request->body ?? null,
-        // ]);
-
-        // $response= [
-        //     'post' => $post,
-        //     'success' => " Create Success"
-        // ];
-
-        // return response()->json($response, 201); 
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'body' => 'nullable|string',
@@ -50,10 +35,11 @@ class TodoController extends Controller
             'body' => $request->body ?? null,
         ]);
     
-        return response()->json([
-            'post' => $post,
-            'success' => "Create Success"
-        ], 201);
+        // return response()->json([
+        //     'post' => $post,
+        //     'success' => "Create Success"
+        // ], 201);
+        return response()->json($post, 201);
     }
 
     function index_id($id){
@@ -84,34 +70,28 @@ class TodoController extends Controller
     function delete($id){
         $id = Todo::find($id);
         if(!$id){
-            return response()->json([
-                'errors'=> 'Id not Find'
-            ]);
+            // return response()->json([
+            //     'errors'=> 'Id not Find'
+            // ]);
+            //!  or
+            // return [
+            //     'errors' => 'Id not Find...'
+            // ];
+            //!  or
+            return [
+                'errors' => [
+                    'fail'=> ['Id not Find...']
+                ]
+            ];
         };
         
         $id->delete();
-        return response()->json([
-            'success'=>"Delete Success"
-        ]);
+        // return response()->json([
+        //     'success'=>"Delete Success"
+        // ]);
+        return [
+            'Success' => 'Delete Success...'
+        ];
     }
 
-
-
-    // }
-    // public function store(Request $request)
-    // {
-    // }
-
-    // public function show(Todo $todo)
-    // {
-    // }
-    // public function edit(Todo $todo)
-    // {
-    // }
-    // public function update(Request $request, Todo $todo)
-    // {
-    // }
-    // public function destroy(Todo $todo)
-    // {
-    // }
 }
